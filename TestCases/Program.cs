@@ -1,5 +1,7 @@
 ﻿using System;
+using System.Collections;
 using System.IO;
+using System.Linq;
 using System.Windows.Markup;
 using System.Xml;
 using TestCases.PublicInterfaces;
@@ -10,15 +12,16 @@ namespace TestCases
     {
         public static void Main(/*string[] args*/)
         {
-            var originalState = new State() { Name = "testState" };
+            var originalStates = new States() { new State() { Name = "testState1" }, new State() { Name = "testState2" } };
+            var originalTestInformation = new TestInformation() { States = originalStates };
             // Save the State to a string.
-            string serializedState = XamlWriter.Save(originalState);
-            Console.WriteLine($"{serializedState}");
-            // Load the state
-            StringReader stringReader = new StringReader(serializedState);
+            string serializedTestInformation = XamlWriter.Save(originalTestInformation);
+            Console.WriteLine($"{serializedTestInformation}");
+            // Load the test information
+            StringReader stringReader = new StringReader(serializedTestInformation);
             XmlReader xmlReader = XmlReader.Create(stringReader);
-            var readerLoadedState = XamlReader.Load(xmlReader) as IState;
-            Console.WriteLine($"Deserialized name={readerLoadedState?.Name}");
+            var readerLoadedTestInformation = XamlReader.Load(xmlReader) as ITestInformation ?? new TestInformation();
+            Console.WriteLine($"Deserialized names={string.Join(", ", readerLoadedTestInformation.States.Select(state => state.Name))}");
         }
     }
 }
