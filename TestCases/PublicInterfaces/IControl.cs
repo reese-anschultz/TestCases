@@ -1,8 +1,8 @@
 ﻿namespace TestCases.PublicInterfaces
 {
-    public interface ITestInformation
+    public interface IControl
     {
+        string Name { get; }
         IStates States { get; }
-        IControl Control { get; }
     }
 }

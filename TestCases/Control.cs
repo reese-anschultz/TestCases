@@ -2,9 +2,9 @@
 
 namespace TestCases
 {
-    public class TestInformation : ITestInformation
+    public class Control : IControl
     {
+        public string Name { get; set; }
         public IStates States { get; set; }
-        public IControl Control { get; set; }
     }
 }
