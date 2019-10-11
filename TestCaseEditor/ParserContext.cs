@@ -1,4 +1,6 @@
-﻿namespace TestCaseEditor
+﻿using TestCaseEditor.Interfaces;
+
+namespace TestCaseEditor
 {
     public abstract class ParserContext : IParserContext
     {

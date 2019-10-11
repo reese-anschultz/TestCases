@@ -1,8 +1,9 @@
 ﻿using System;
 using System.Linq;
+using TestCaseEditor.Interfaces;
 using TestCases.PublicInterfaces;
 
-namespace TestCaseEditor
+namespace TestCaseEditor.ParserContexts
 {
     public class ActionsParserContext : ParserContext
     {

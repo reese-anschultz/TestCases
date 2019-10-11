@@ -1,10 +1,7 @@
-﻿using System.IO;
-using System.Windows.Markup;
-using System.Xml;
+﻿using TestCaseEditor.Interfaces;
 using TestCases.PublicInterfaces;
-using TestCases.PublicObjects;
 
-namespace TestCaseEditor
+namespace TestCaseEditor.ParserContexts
 {
     public class TestInformationParserContext : ParserContext
     {

@@ -1,4 +1,4 @@
-﻿namespace TestCaseEditor
+﻿namespace TestCaseEditor.Interfaces
 {
     public interface IParserContextManager
     {

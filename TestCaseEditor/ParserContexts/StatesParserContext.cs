@@ -1,9 +1,10 @@
 ﻿using System;
 using System.Linq;
+using TestCaseEditor.Interfaces;
 using TestCases.PublicInterfaces;
 using TestCases.PublicObjects;
 
-namespace TestCaseEditor
+namespace TestCaseEditor.ParserContexts
 {
     public class StatesParserContext : ParserContext
     {

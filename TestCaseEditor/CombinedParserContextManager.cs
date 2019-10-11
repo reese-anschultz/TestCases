@@ -1,9 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
+using TestCaseEditor.Interfaces;
 
 namespace TestCaseEditor
 {
-    public class CombinedParserContextManager : ParserContext, ICombinedParserContextManager
+    public class CombinedParserContextManager : ParserContext, IParserContextManager
     {
         private readonly Stack<IParserContext> _stackParserContexts = new Stack<IParserContext>();
 
