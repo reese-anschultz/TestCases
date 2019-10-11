@@ -4,6 +4,8 @@ using System.Linq;
 using System.Windows.Markup;
 using System.Xml;
 using TestCases.PublicInterfaces;
+using TestCases.PublicObjects;
+using Action = TestCases.PublicObjects.Action;
 
 namespace TestCases
 {
@@ -46,6 +48,19 @@ namespace TestCases
                     control.States.ToList().ForEach(state =>
                     {
                         Console.WriteLine($"State name={state.Name}");
+                    });
+                });
+            });
+            var internals = readerLoadedTestInformation.MakeTestsInformationInternal();
+            internals.Actions.ToList().ForEach(action =>
+            {
+                Console.WriteLine($"Internal Action name={action.Name}");
+                action.Controls.ToList().ForEach(control =>
+                {
+                    Console.WriteLine($"Internal Control name={control.Name}");
+                    control.States.ToList().ForEach(state =>
+                    {
+                        Console.WriteLine($"Internal State name={state.Name}");
                     });
                 });
             });
