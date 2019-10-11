@@ -6,9 +6,9 @@ namespace TestCases.PublicObjects
 {
     public class TestInformation : ITestInformation
     {
-        public IStates States { get; set; }
-        public IControls Controls { get; set; }
-        public IActions Actions { get; set; }
+        public IStates States { get; set; } = new States();
+        public IControls Controls { get; set; } = new Controls();
+        public IActions Actions { get; set; } = new Actions();
         public ITestInformationInternal MakeTestsInformationInternal()
         {
             return new TestInformationInternal()

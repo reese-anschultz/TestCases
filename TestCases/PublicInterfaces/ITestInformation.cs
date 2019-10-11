@@ -4,9 +4,9 @@ namespace TestCases.PublicInterfaces
 {
     public interface ITestInformation
     {
-        IStates States { get; }
-        IControls Controls { get; }
-        IActions Actions { get; }
+        IStates States { get; set;  }
+        IControls Controls { get; set; }
+        IActions Actions { get; set;  }
         ITestInformationInternal MakeTestsInformationInternal();
     }
 }
