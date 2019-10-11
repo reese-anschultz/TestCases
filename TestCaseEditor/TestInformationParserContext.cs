@@ -8,9 +8,9 @@ namespace TestCaseEditor
 {
     public class TestInformationParserContext : ParserContext
     {
-        private readonly PropertyAccessor<ITestInformation> _testInformationAccessor;
+        private readonly ITestInformation _testInformationAccessor;
 
-        public TestInformationParserContext(PropertyAccessor<ITestInformation> testInformationAccessor)
+        public TestInformationParserContext(ITestInformation testInformationAccessor)
         {
             _testInformationAccessor = testInformationAccessor;
         }
@@ -23,24 +23,11 @@ namespace TestCaseEditor
             {
                 var command = args[0].ToLowerInvariant();
                 if (command == "states")
-                    parserContextManager.PushContext(new StatesParserContext(new PropertyAccessor<IStates>(() => _testInformationAccessor.Get().States, states => _testInformationAccessor.Get().States = states)));
-                else if (command == "new")
-                {
-                    _testInformationAccessor.Set(new TestInformation());
-                }
-            }
-            else if (args.Length == 2)
-            {
-                var command = args[0].ToLowerInvariant();
-                if (command == "save")
-                {
-                    XamlWriter.Save(_testInformationAccessor.Get(), File.CreateText(args[1]));
-                }
-                else if (command == "load")
-                {
-                    XmlReader xmlReader = XmlReader.Create(File.OpenText(args[1]));
-                    _testInformationAccessor.Set(XamlReader.Load(xmlReader) as ITestInformation);
-                }
+                    parserContextManager.PushContext(new StatesParserContext(_testInformationAccessor.States));
+                else if (command == "controls")
+                    parserContextManager.PushContext(new ControlsParserContext(_testInformationAccessor.Controls));
+                else if (command == "actions")
+                    parserContextManager.PushContext(new ActionsParserContext(_testInformationAccessor.Actions));
             }
             return false;
         }

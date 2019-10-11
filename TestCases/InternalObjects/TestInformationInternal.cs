@@ -4,8 +4,8 @@ namespace TestCases.InternalObjects
 {
     public class TestInformationInternal : ITestInformationInternal
     {
-        public IStatesInternal States { get; set; }
-        public IControlsInternal Controls { get; set; }
-        public IActionsInternal Actions { get; set; }
+        public IStatesInternal States { get; set; } = new StatesInternal();
+        public IControlsInternal Controls { get; set; } = new ControlsInternal();
+        public IActionsInternal Actions { get; set; } = new ActionsInternal();
     }
 }

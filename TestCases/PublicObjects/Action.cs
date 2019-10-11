@@ -7,7 +7,7 @@ namespace TestCases.PublicObjects
     public class Action : IAction
     {
         public string Name { get; set; }
-        public IControls Controls { get; set; }
+        public IControls Controls { get; set; } = new Controls();
 
         public IActionInternal MakeActionInternal()
         {

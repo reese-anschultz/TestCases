@@ -1,6 +1,4 @@
 ﻿using System;
-using TestCases.PublicInterfaces;
-using TestCases.PublicObjects;
 
 namespace TestCaseEditor
 {
@@ -8,8 +6,8 @@ namespace TestCaseEditor
     {
         public static void Main(/*string[] args*/)
         {
-            var testInformation = new TestInformation() as ITestInformation;
-            var parserContextManager = new CombinedParserContextManager(new TestInformationParserContext(new PropertyAccessor<ITestInformation>(() => testInformation, newTestInformation => testInformation = newTestInformation)));
+            var applicationContext = new ApplicationContext();
+            var parserContextManager = new CombinedParserContextManager(new ApplicationParserContext(applicationContext));
             var quit = false;
             while (!quit && GetLine(parserContextManager.Prompt, out var line))
             {

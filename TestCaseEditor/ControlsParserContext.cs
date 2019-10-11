@@ -5,16 +5,16 @@ using TestCases.PublicObjects;
 
 namespace TestCaseEditor
 {
-    public class StatesParserContext : ParserContext
+    public class ControlsParserContext : ParserContext
     {
-        private readonly IStates _states;
+        private readonly IControls _controls;
 
-        public StatesParserContext(IStates states)
+        public ControlsParserContext(IControls controls)
         {
-            _states = states;
+            _controls = controls;
         }
 
-        public override string Prompt => "States";
+        public override string Prompt => "Controls";
 
         protected override bool Execute(string[] args, IParserContextManager parserContextManager)
         {
@@ -25,31 +25,32 @@ namespace TestCaseEditor
                 {
                     case "add":
                         if (args.Length == 2)
-                            if (_states.Any(state => state.Name == args[1]))
-                                Console.WriteLine($"Duplicate state ignored: {args[1]}");
+                            if (_controls.Any(control => control.Name == args[1]))
+                                Console.WriteLine($"Duplicate control ignored: {args[1]}");
                             else
-                                _states.Add(new State() { Name = args[1] });
+                                _controls.Add(new Control() { Name = args[1] });
                         break;
 
                     case "delete":
                         if (args.Length == 2)
                         {
-                            var item = _states.SingleOrDefault(state => state.Name == args[1]);
-                            if (item == default(IState))
-                                Console.WriteLine($"Missing state not deleted: {args[1]}");
+                            var item = _controls.SingleOrDefault(control => control.Name == args[1]);
+                            if (item == default(IControl))
+                                Console.WriteLine($"Missing control not deleted: {args[1]}");
                             else
-                                _states.Remove(item);
+                                _controls.Remove(item);
                         }
+
                         break;
 
                     case "clear":
                         if (args.Length == 1)
-                            _states.Clear();
+                            _controls.Clear();
                         break;
 
                     case "print":
                         if (args.Length == 1)
-                            _states.ToList().ForEach(state => Console.WriteLine(state.Name));
+                            _controls.ToList().ForEach(control => Console.WriteLine(control.Name));
                         break;
 
                     default:
@@ -57,6 +58,7 @@ namespace TestCaseEditor
                         break;
                 }
             }
+
             return false;
         }
     }

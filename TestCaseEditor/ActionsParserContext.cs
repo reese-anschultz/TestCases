@@ -1,20 +1,19 @@
 ﻿using System;
 using System.Linq;
 using TestCases.PublicInterfaces;
-using TestCases.PublicObjects;
 
 namespace TestCaseEditor
 {
-    public class StatesParserContext : ParserContext
+    public class ActionsParserContext : ParserContext
     {
-        private readonly IStates _states;
+        private readonly IActions _actions;
 
-        public StatesParserContext(IStates states)
+        public ActionsParserContext(IActions actions)
         {
-            _states = states;
+            _actions = actions;
         }
 
-        public override string Prompt => "States";
+        public override string Prompt => "Actions";
 
         protected override bool Execute(string[] args, IParserContextManager parserContextManager)
         {
@@ -25,31 +24,32 @@ namespace TestCaseEditor
                 {
                     case "add":
                         if (args.Length == 2)
-                            if (_states.Any(state => state.Name == args[1]))
-                                Console.WriteLine($"Duplicate state ignored: {args[1]}");
+                            if (_actions.Any(action => action.Name == args[1]))
+                                Console.WriteLine($"Duplicate action ignored: {args[1]}");
                             else
-                                _states.Add(new State() { Name = args[1] });
+                                _actions.Add(new TestCases.PublicObjects.Action() { Name = args[1] });
                         break;
 
                     case "delete":
                         if (args.Length == 2)
                         {
-                            var item = _states.SingleOrDefault(state => state.Name == args[1]);
-                            if (item == default(IState))
-                                Console.WriteLine($"Missing state not deleted: {args[1]}");
+                            var item = _actions.SingleOrDefault(action => action.Name == args[1]);
+                            if (item == default(IAction))
+                                Console.WriteLine($"Missing action not deleted: {args[1]}");
                             else
-                                _states.Remove(item);
+                                _actions.Remove(item);
                         }
+
                         break;
 
                     case "clear":
                         if (args.Length == 1)
-                            _states.Clear();
+                            _actions.Clear();
                         break;
 
                     case "print":
                         if (args.Length == 1)
-                            _states.ToList().ForEach(state => Console.WriteLine(state.Name));
+                            _actions.ToList().ForEach(action => Console.WriteLine(action.Name));
                         break;
 
                     default:
@@ -57,6 +57,7 @@ namespace TestCaseEditor
                         break;
                 }
             }
+
             return false;
         }
     }
