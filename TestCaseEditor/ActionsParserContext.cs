@@ -7,13 +7,15 @@ namespace TestCaseEditor
     public class ActionsParserContext : ParserContext
     {
         private readonly IActions _actions;
+        private readonly string _promptPrefix;
 
-        public ActionsParserContext(IActions actions)
+        public ActionsParserContext(IActions actions, string promptPrefix)
         {
             _actions = actions;
+            _promptPrefix = promptPrefix;
         }
 
-        public override string Prompt => "Actions";
+        public override string Prompt => _promptPrefix + " Actions";
 
         protected override bool Execute(string[] args, IParserContextManager parserContextManager)
         {
@@ -27,7 +29,11 @@ namespace TestCaseEditor
                             if (_actions.Any(action => action.Name == args[1]))
                                 Console.WriteLine($"Duplicate action ignored: {args[1]}");
                             else
-                                _actions.Add(new TestCases.PublicObjects.Action() { Name = args[1] });
+                            {
+                                var action = new TestCases.PublicObjects.Action() { Name = args[1] };
+                                _actions.Add(action);
+                                parserContextManager.PushContext(new ControlsParserContext(action.Controls, action.Name));
+                            }
                         break;
 
                     case "delete":
@@ -39,7 +45,17 @@ namespace TestCaseEditor
                             else
                                 _actions.Remove(item);
                         }
+                        break;
 
+                    case "select":
+                        if (args.Length == 2)
+                        {
+                            var item = _actions.SingleOrDefault(action => action.Name == args[1]);
+                            if (item == default(IAction))
+                                Console.WriteLine($"Missing action not deleted: {args[1]}");
+                            else
+                                parserContextManager.PushContext(new ControlsParserContext(item.Controls, item.Name));
+                        }
                         break;
 
                     case "clear":

@@ -1,0 +1,8 @@
+{
+  "profiles": {
+    "TestCaseEditor": {
+      "commandName": "Project",
+      "workingDirectory": "."
+    }
+  }
+}

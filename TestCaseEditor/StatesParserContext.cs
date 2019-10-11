@@ -8,13 +8,15 @@ namespace TestCaseEditor
     public class StatesParserContext : ParserContext
     {
         private readonly IStates _states;
+        private readonly string _promptPrefix;
 
-        public StatesParserContext(IStates states)
+        public StatesParserContext(IStates states, string promptPrefix)
         {
             _states = states;
+            _promptPrefix = promptPrefix;
         }
 
-        public override string Prompt => "States";
+        public override string Prompt => _promptPrefix + " States";
 
         protected override bool Execute(string[] args, IParserContextManager parserContextManager)
         {

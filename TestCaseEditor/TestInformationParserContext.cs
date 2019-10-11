@@ -23,11 +23,11 @@ namespace TestCaseEditor
             {
                 var command = args[0].ToLowerInvariant();
                 if (command == "states")
-                    parserContextManager.PushContext(new StatesParserContext(_testInformationAccessor.States));
+                    parserContextManager.PushContext(new StatesParserContext(_testInformationAccessor.States, "global"));
                 else if (command == "controls")
-                    parserContextManager.PushContext(new ControlsParserContext(_testInformationAccessor.Controls));
+                    parserContextManager.PushContext(new ControlsParserContext(_testInformationAccessor.Controls, "global"));
                 else if (command == "actions")
-                    parserContextManager.PushContext(new ActionsParserContext(_testInformationAccessor.Actions));
+                    parserContextManager.PushContext(new ActionsParserContext(_testInformationAccessor.Actions, "global"));
             }
             return false;
         }

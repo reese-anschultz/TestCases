@@ -8,13 +8,15 @@ namespace TestCaseEditor
     public class ControlsParserContext : ParserContext
     {
         private readonly IControls _controls;
+        private readonly string _promptPrefix;
 
-        public ControlsParserContext(IControls controls)
+        public ControlsParserContext(IControls controls, string promptPrefix)
         {
             _controls = controls;
+            _promptPrefix = promptPrefix;
         }
 
-        public override string Prompt => "Controls";
+        public override string Prompt => _promptPrefix + " Controls";
 
         protected override bool Execute(string[] args, IParserContextManager parserContextManager)
         {
@@ -28,7 +30,12 @@ namespace TestCaseEditor
                             if (_controls.Any(control => control.Name == args[1]))
                                 Console.WriteLine($"Duplicate control ignored: {args[1]}");
                             else
-                                _controls.Add(new Control() { Name = args[1] });
+                            {
+                                var control = new Control() { Name = args[1] };
+                                _controls.Add(control);
+                                parserContextManager.PushContext(new StatesParserContext(control.States, control.Name));
+                            }
+
                         break;
 
                     case "delete":
@@ -40,7 +47,17 @@ namespace TestCaseEditor
                             else
                                 _controls.Remove(item);
                         }
+                        break;
 
+                    case "select":
+                        if (args.Length == 2)
+                        {
+                            var item = _controls.SingleOrDefault(control => control.Name == args[1]);
+                            if (item == default(IControl))
+                                Console.WriteLine($"Missing control not selected: {args[1]}");
+                            else
+                                parserContextManager.PushContext(new StatesParserContext(item.States, item.Name));
+                        }
                         break;
 
                     case "clear":
