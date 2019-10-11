@@ -6,5 +6,6 @@ namespace TestCases
     {
         public IStates States { get; set; }
         public IControl Control { get; set; }
+        public IActions Actions { get; set; }
     }
 }

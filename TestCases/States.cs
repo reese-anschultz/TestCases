@@ -10,6 +10,5 @@ namespace TestCases
 
         public States(IEnumerable<State> collection) : base(collection)
         { }
-
     }
 }

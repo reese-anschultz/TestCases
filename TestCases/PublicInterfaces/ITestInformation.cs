@@ -4,5 +4,6 @@
     {
         IStates States { get; }
         IControl Control { get; }
+        IActions Actions { get; }
     }
 }
