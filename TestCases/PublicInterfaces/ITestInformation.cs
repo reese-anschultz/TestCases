@@ -3,7 +3,7 @@
     public interface ITestInformation
     {
         IStates States { get; }
-        IControl Control { get; }
+        IControls Controls { get; }
         IActions Actions { get; }
     }
 }
