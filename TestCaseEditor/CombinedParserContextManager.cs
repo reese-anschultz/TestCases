@@ -1,36 +1,55 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using TestCaseEditor.Interfaces;
 
 namespace TestCaseEditor
 {
     public class CombinedParserContextManager : ParserContext, IParserContextManager
     {
+        public override string Prompt => _stackParserContexts.Peek().Prompt;
+        public override CommandInformation[] Commands { get; }
         private readonly Stack<IParserContext> _stackParserContexts = new Stack<IParserContext>();
 
         public CombinedParserContextManager(IParserContext currentContext)
         {
             PushContext(currentContext);
-        }
-
-        public override string Prompt => _stackParserContexts.Peek().Prompt;
-
-        protected override bool Execute(string[] args, IParserContextManager parserContextManager)
-        {
-            if (args.Length == 1)
+            Commands = new[]
             {
-                var command = args[0].ToLowerInvariant();
-                if (command == "pop" && _stackParserContexts.Count > 1)
+                new CommandInformation()
                 {
-                    _stackParserContexts.Pop();
-                    return false;
+                    ArgumentCount = 1,
+                    CommandText = "pop",
+                    CommandImplementation = (args,parserContextManager) =>
+                    {
+                        _stackParserContexts.Pop();
+                        return false;
+                    }
+                },
+                new CommandInformation()
+                {
+                    ArgumentCount = 1,
+                    CommandText = "quit",
+                    CommandImplementation = (args,parserContextManager) => true
+                },
+                new CommandInformation()
+                {
+                    ArgumentCount = 1,
+                    CommandText = "help",
+                    CommandImplementation = (args,parserContextManager) =>
+                    {
+                        _stackParserContexts.Peek().Commands.Select(command=>command.CommandText).Concat(this.Commands.Select(command=>command.CommandText)).ToList().ForEach(Console.WriteLine);
+                        return false;
 
-                }
-                if (command == "quit")
-                    return true;
-
-            }
-            return _stackParserContexts.Peek().ParseAndExecute(string.Join(" ", args), parserContextManager);
+                    }
+                },
+                new CommandInformation()
+                {
+                    ArgumentCount = 0,
+                    CommandText = "",
+                    CommandImplementation = (args,parserContextManager) => _stackParserContexts.Peek().ParseAndExecute(string.Join(" ", args), parserContextManager)
+                },
+            };
         }
 
         public void PushContext(IParserContext parserContext)

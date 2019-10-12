@@ -1,7 +1,6 @@
 ﻿using System.IO;
 using System.Windows.Markup;
 using System.Xml;
-using TestCaseEditor.Interfaces;
 using TestCases.PublicInterfaces;
 using TestCases.PublicObjects;
 
@@ -9,43 +8,56 @@ namespace TestCaseEditor.ParserContexts
 {
     public class ApplicationParserContext : ParserContext
     {
-        private readonly ApplicationContext _applicationContext;
+        public override string Prompt => "Application";
+        public override CommandInformation[] Commands { get; }
 
         public ApplicationParserContext(ApplicationContext applicationContext)
         {
-            _applicationContext = applicationContext;
-        }
-
-        public override string Prompt => "Application";
-
-        protected override bool Execute(string[] args, IParserContextManager parserContextManager)
-        {
-            if (args.Length == 1)
+            Commands = new[]
             {
-                var command = args[0].ToLowerInvariant();
-                if (command == "new")
+                new CommandInformation()
                 {
-                    _applicationContext.TestInformation = new TestInformation();
-                }
-                else if (command == "testinformation")
+                    ArgumentCount = 1,
+                    CommandText = "new",
+                    CommandImplementation = (args,parserContextManager) =>
+                    {
+                        applicationContext.TestInformation = new TestInformation();
+                        return false;
+                    }
+                },
+                new CommandInformation()
                 {
-                    parserContextManager.PushContext(new TestInformationParserContext(_applicationContext.TestInformation));
-                }
-            }
-            else if (args.Length == 2)
-            {
-                var command = args[0].ToLowerInvariant();
-                if (command == "save")
+                    ArgumentCount = 2,
+                    CommandText = "save",
+                    CommandImplementation = (args,parserContextManager) =>
+                    {
+                        XamlWriter.Save(applicationContext.TestInformation, File.CreateText(args[1]));
+                        return false;
+                    }
+                },
+                new CommandInformation()
                 {
-                    XamlWriter.Save(_applicationContext.TestInformation, File.CreateText(args[1]));
-                }
-                else if (command == "load")
+                    ArgumentCount = 2,
+                    CommandText = "load",
+                    CommandImplementation = (args,parserContextManager) =>
+                    {
+                        var xmlReader = XmlReader.Create(File.OpenText(args[1]));
+                        applicationContext.TestInformation = XamlReader.Load(xmlReader) as ITestInformation;
+                        return false;
+                    }
+                },
+                new CommandInformation()
                 {
-                    XmlReader xmlReader = XmlReader.Create(File.OpenText(args[1]));
-                    _applicationContext.TestInformation = XamlReader.Load(xmlReader) as ITestInformation;
+                    ArgumentCount = 1,
+                    CommandText = "testinformation",
+                    CommandImplementation = (args,parserContextManager) =>
+                    {
+                        parserContextManager.PushContext(new TestInformationParserContext(applicationContext.TestInformation));
+                        return false;
+                    }
                 }
-            }
-            return false;
+            };
         }
     }
+
 }

@@ -1,66 +1,71 @@
 ﻿using System;
 using System.Linq;
-using TestCaseEditor.Interfaces;
 using TestCases.PublicInterfaces;
-using TestCases.PublicObjects;
 
 namespace TestCaseEditor.ParserContexts
 {
     public class StatesParserContext : ParserContext
     {
-        private readonly IStates _states;
+        public override string Prompt => _promptPrefix + " States";
+        public override CommandInformation[] Commands { get; }
         private readonly string _promptPrefix;
 
         public StatesParserContext(IStates states, string promptPrefix)
         {
-            _states = states;
             _promptPrefix = promptPrefix;
-        }
-
-        public override string Prompt => _promptPrefix + " States";
-
-        protected override bool Execute(string[] args, IParserContextManager parserContextManager)
-        {
-            if (args.Length > 0)
+            Commands = new[]
             {
-                var command = args[0].ToLowerInvariant();
-                switch (command)
+                new CommandInformation()
                 {
-                    case "add":
-                        if (args.Length == 2)
-                            if (_states.Any(state => state.Name == args[1]))
-                                Console.WriteLine($"Duplicate state ignored: {args[1]}");
-                            else
-                                _states.Add(new State() { Name = args[1] });
-                        break;
-
-                    case "delete":
-                        if (args.Length == 2)
+                    ArgumentCount = 1,
+                    CommandText = "clear",
+                    CommandImplementation = (args,parserContextManager) =>
+                    {
+                        states.Clear();
+                        return false;
+                    }
+                },
+                new CommandInformation()
+                {
+                    ArgumentCount = 1,
+                    CommandText = "print",
+                    CommandImplementation = (args,parserContextManager) =>
+                    {
+                        states.ToList().ForEach(state => Console.WriteLine(state.Name));
+                        return false;
+                    }
+                },
+                new CommandInformation()
+                {
+                    ArgumentCount = 2,
+                    CommandText = "add",
+                    CommandImplementation = (args,parserContextManager) =>
+                    {
+                        if (states.Any(state => state.Name == args[1]))
+                            Console.WriteLine($"Duplicate state ignored: {args[1]}");
+                        else
                         {
-                            var item = _states.SingleOrDefault(state => state.Name == args[1]);
-                            if (item == default(IState))
-                                Console.WriteLine($"Missing state not deleted: {args[1]}");
-                            else
-                                _states.Remove(item);
+                            var state = new TestCases.PublicObjects.State() { Name = args[1] };
+                            states.Add(state);
                         }
-                        break;
-
-                    case "clear":
-                        if (args.Length == 1)
-                            _states.Clear();
-                        break;
-
-                    case "print":
-                        if (args.Length == 1)
-                            _states.ToList().ForEach(state => Console.WriteLine(state.Name));
-                        break;
-
-                    default:
-                        Console.WriteLine($"Unknown command: {command}");
-                        break;
+                        return false;
+                    }
+                },
+                new CommandInformation()
+                {
+                    ArgumentCount = 2,
+                    CommandText = "delete",
+                    CommandImplementation = (args,parserContextManager) =>
+                    {
+                        var item = states.SingleOrDefault(state => state.Name == args[1]);
+                        if (item == default(IState))
+                            Console.WriteLine($"Missing state not deleted: {args[1]}");
+                        else
+                            states.Remove(item);
+                        return false;
+                    }
                 }
-            }
-            return false;
+            };
         }
     }
 }
