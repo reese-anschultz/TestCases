@@ -54,6 +54,23 @@ namespace TestCaseEditor.ParserContexts
                 },
                 new CommandInformation()
                 {
+                    ArgumentCount = 3,
+                    CommandText = "reference",
+                    CommandImplementation = (args,parserContextManager) =>
+                    {
+                        if (controls.Any(control => control.Name == args[1]))
+                            Console.WriteLine($"Duplicate control ignored: {args[1]}");
+                        else
+                        {
+                            var control = new TestCases.PublicObjects.ControlReference() { Name = args[1], ReferenceName = args[2] };
+                            controls.Add(control);
+                            parserContextManager.PushContext(new StatesParserContext(control.States, control.Name));
+                        }
+                        return false;
+                    }
+                },
+                new CommandInformation()
+                {
                     ArgumentCount = 2,
                     CommandText = "delete",
                     CommandImplementation = (args,parserContextManager) =>
