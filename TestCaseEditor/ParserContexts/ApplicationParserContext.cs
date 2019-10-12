@@ -41,8 +41,12 @@ namespace TestCaseEditor.ParserContexts
                     CommandText = "load",
                     CommandImplementation = (args,parserContextManager) =>
                     {
-                        var xmlReader = XmlReader.Create(File.OpenText(args[1]));
-                        applicationContext.TestInformation = XamlReader.Load(xmlReader) as ITestInformation;
+                        using (var file=File.OpenText(args[1]))
+                        using (var xmlReader = XmlReader.Create(file))
+                        {
+                            applicationContext.TestInformation = XamlReader.Load(xmlReader) as ITestInformation;
+                        }
+
                         return false;
                     }
                 },
