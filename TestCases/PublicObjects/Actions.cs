@@ -6,7 +6,7 @@ using TestCases.PublicInterfaces;
 
 namespace TestCases.PublicObjects
 {
-    public class Actions : List<IAction>, IActions
+    public class Actions : TestCaseList<IAction>, IActions
     {
         public Actions()
         { }
@@ -16,7 +16,7 @@ namespace TestCases.PublicObjects
 
         public IActionsInternal MakeActionsInternal()
         {
-            return new ActionsInternal(this.Select(action=>action.MakeActionInternal()));
+            return new ActionsInternal(this.Select(action => action.MakeActionInternal()));
         }
     }
 }

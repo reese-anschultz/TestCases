@@ -6,7 +6,7 @@ using TestCases.PublicInterfaces;
 
 namespace TestCases.PublicObjects
 {
-    public class States : List<IState>, IStates
+    public class States : TestCaseList<IState>, IStates
     {
         public States()
         { }
@@ -16,7 +16,7 @@ namespace TestCases.PublicObjects
 
         public IStatesInternal MakeStatesInternal()
         {
-            return new StatesInternal(this.Select(state=> state.MakeStateInternal()));
+            return new StatesInternal(this.Select(state => state.MakeStateInternal()));
         }
     }
 }

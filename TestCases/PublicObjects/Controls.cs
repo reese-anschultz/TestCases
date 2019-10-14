@@ -6,7 +6,7 @@ using TestCases.PublicInterfaces;
 
 namespace TestCases.PublicObjects
 {
-    public class Controls : List<IControl>, IControls
+    public class Controls : TestCaseList<IControl>, IControls
     {
         public Controls()
         { }
@@ -16,7 +16,7 @@ namespace TestCases.PublicObjects
 
         public IControlsInternal MakeControlsInternal()
         {
-            return new ControlsInternal(this.Select(control=> control.MakeControlInternal()));
+            return new ControlsInternal(this.Select(control => control.MakeControlInternal()));
         }
     }
 }
